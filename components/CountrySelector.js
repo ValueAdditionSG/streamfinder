@@ -23,8 +23,13 @@ const COUNTRIES = [
   { code: 'NL', name: '🇳🇱 Netherlands' },
   { code: 'SE', name: '🇸🇪 Sweden' },
   { code: 'NO', name: '🇳🇴 Norway' },
-
+  { code: 'VN', name: '🇻🇳 Vietnam' },
 ]
+
+// Countries not covered by TMDB — we fall back to JustWatch directly
+export const JUSTWATCH_FALLBACK = {
+  VN: 'https://www.justwatch.com/vn/search?q=',
+}
 
 export default function CountrySelector({ value, onChange }) {
   return (

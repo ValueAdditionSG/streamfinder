@@ -96,7 +96,7 @@ export default function ResultCard({ item, country }) {
 
       {expanded && (
         <div className="px-4 pb-4 border-t border-gray-800 pt-3">
-          <ProviderBadges data={providerData} loading={loading} />
+          <ProviderBadges data={providerData} loading={loading} country={country} title={item.title} />
         </div>
       )}
     </div>

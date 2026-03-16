@@ -1,5 +1,6 @@
 // components/ProviderBadges.js
 import Image from 'next/image'
+import { JUSTWATCH_FALLBACK } from './CountrySelector'
 
 function ProviderLogo({ provider }) {
   return (
@@ -40,7 +41,7 @@ function Section({ label, providers, colorClass }) {
   )
 }
 
-export default function ProviderBadges({ data, loading }) {
+export default function ProviderBadges({ data, loading, country, title }) {
   if (loading) {
     return (
       <div className="mt-3 animate-pulse">
@@ -57,6 +58,24 @@ export default function ProviderBadges({ data, loading }) {
   if (!data) return null
 
   if (!data.available) {
+    const fallbackBase = JUSTWATCH_FALLBACK[country]
+    if (fallbackBase && title) {
+      return (
+        <div className="mt-3">
+          <p className="text-sm text-gray-400 mb-2">
+            Streaming data for this country isn&apos;t in our database yet.
+          </p>
+          <a
+            href={`${fallbackBase}${encodeURIComponent(title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-500 hover:text-brand-400"
+          >
+            🔍 Search on JustWatch Vietnam →
+          </a>
+        </div>
+      )
+    }
     return (
       <p className="text-sm text-gray-500 mt-3 italic">
         Not available for streaming in this country.

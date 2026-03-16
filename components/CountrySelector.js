@@ -23,8 +23,7 @@ const COUNTRIES = [
   { code: 'NL', name: '🇳🇱 Netherlands' },
   { code: 'SE', name: '🇸🇪 Sweden' },
   { code: 'NO', name: '🇳🇴 Norway' },
-  { code: 'AE', name: '🇦🇪 UAE' },
-  { code: 'VN', name: '🇻🇳 Vietnam' },
+
 ]
 
 export default function CountrySelector({ value, onChange }) {

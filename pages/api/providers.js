@@ -10,22 +10,17 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'id and mediaType are required' })
   }
 
-  const token = process.env.TMDB_READ_TOKEN
-  if (!token) {
-    return res.status(500).json({ error: 'TMDB token not configured' })
+  const apiKey = process.env.TMDB_API_KEY
+  if (!apiKey) {
+    return res.status(500).json({ error: 'TMDB API key not configured' })
   }
 
   try {
     const endpoint = mediaType === 'movie'
-      ? `${TMDB_BASE}/movie/${id}/watch/providers`
-      : `${TMDB_BASE}/tv/${id}/watch/providers`
+      ? `${TMDB_BASE}/movie/${id}/watch/providers?api_key=${apiKey}`
+      : `${TMDB_BASE}/tv/${id}/watch/providers?api_key=${apiKey}`
 
-    const response = await fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
+    const response = await fetch(endpoint)
 
     if (!response.ok) {
       throw new Error(`TMDB error: ${response.status}`)

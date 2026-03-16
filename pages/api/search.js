@@ -10,20 +10,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Query too short' })
   }
 
-  const token = process.env.TMDB_READ_TOKEN
-  if (!token) {
-    return res.status(500).json({ error: 'TMDB token not configured' })
+  const apiKey = process.env.TMDB_API_KEY
+  if (!apiKey) {
+    return res.status(500).json({ error: 'TMDB API key not configured' })
   }
 
   try {
     const response = await fetch(
-      `${TMDB_BASE}/search/multi?query=${encodeURIComponent(query)}&page=${page}&include_adult=false`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
+      `${TMDB_BASE}/search/multi?api_key=${apiKey}&query=${encodeURIComponent(query)}&page=${page}&include_adult=false`
     )
 
     if (!response.ok) {

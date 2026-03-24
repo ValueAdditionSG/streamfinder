@@ -12,8 +12,9 @@ GITHUB_RAW="https://raw.githubusercontent.com/ValueAdditionSG/streamfinder/surge
 echo ""
 echo "=== Step 1: Installing Python packages ==="
 apt-get update -q
-apt-get install -y python3-pip git
-pip3 install streamlit requests openai --quiet
+apt-get install -y python3-pip python3-venv git
+python3 -m venv /opt/surgeon-intel-venv
+/opt/surgeon-intel-venv/bin/pip install streamlit requests openai --quiet
 echo "✓ Packages installed"
 
 echo ""
@@ -38,7 +39,7 @@ After=network.target
 Type=simple
 WorkingDirectory=$APP_DIR
 Environment="DASHSCOPE_API_KEY=$DASHSCOPE_KEY"
-ExecStart=/usr/bin/python3 -m streamlit run app.py --server.port $PORT --server.address 127.0.0.1 --server.headless true --browser.gatherUsageStats false --theme.base dark --theme.primaryColor "#00d4aa" --server.baseUrlPath "/surgeon-intel"
+ExecStart=/opt/surgeon-intel-venv/bin/python -m streamlit run app.py --server.port $PORT --server.address 127.0.0.1 --server.headless true --browser.gatherUsageStats false --theme.base dark --theme.primaryColor "#00d4aa" --server.baseUrlPath "/surgeon-intel"
 Restart=on-failure
 RestartSec=5
 

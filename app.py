@@ -14,6 +14,19 @@ from fetchers.open_payments import fetch_payments
 from fetchers.web_search import search_surgeon
 from synthesizer import build_brief
 
+def _brief_to_plaintext(brief: dict, name: str) -> str:
+    lines = ['SURGEON INTELLIGENCE BRIEF', f'Generated for: {name}', '='*50, '']
+    snap = brief.get('surgeon_snapshot', {})
+    lines += [f'Name: {snap.get("name", name)}', f'Specialty: {snap.get("specialty", "")}', '']
+    rel = brief.get('relationship_strategy', {})
+    lines += [f'Tier: {rel.get("engagement_tier", "")}', f'Next: {rel.get("next_best_action", "")}', '']
+    intel = brief.get('intelligence_for_rep', {})
+    lines += ['ENTRY POINTS:'] + [f'  - {ep}' for ep in intel.get('strongest_entry_points', [])]
+    lines += ['', 'CHECKLIST:'] + [f'  [ ] {i}' for i in brief.get('pre_call_checklist', [])]
+    return chr(10).join(lines)
+
+
+
 # ── Config ─────────────────────────────────────────────────────────────────
 DASHSCOPE_KEY = os.environ.get(
     "DASHSCOPE_API_KEY",
@@ -423,45 +436,3 @@ elif submitted and not surgeon_name.strip():
 st.divider()
 st.caption("🏥 Surgeon Intel Agent · Data from PubMed, ClinicalTrials.gov, CMS Open Payments, NPI Registry · AI synthesis by Qwen")
 
-
-def _brief_to_plaintext(brief: dict, name: str) -> str:
-    """Convert brief to plain text for CRM copy-paste."""
-    lines = [
-        f"SURGEON INTELLIGENCE BRIEF",
-        f"Generated for: {name}",
-        "=" * 50,
-        "",
-    ]
-    snap = brief.get("surgeon_snapshot", {})
-    lines += [
-        f"Name: {snap.get('name', name)}",
-        f"Specialty: {snap.get('specialty', '')}",
-        f"Institution: {snap.get('institution', '')}",
-        f"NPI: {snap.get('npi', 'N/A')}",
-        "",
-    ]
-
-    rel = brief.get("relationship_strategy", {})
-    lines += [
-        f"ENGAGEMENT TIER: {rel.get('engagement_tier', '')}",
-        f"NEXT BEST ACTION: {rel.get('next_best_action', '')}",
-        "",
-    ]
-
-    intel = brief.get("intelligence_for_rep", {})
-    lines += ["ENTRY POINTS:"]
-    for ep in intel.get("strongest_entry_points", []):
-        lines.append(f"  - {ep}")
-    lines.append("")
-
-    lines += ["LIKELY OBJECTIONS:"]
-    for obj in intel.get("likely_objections", []):
-        lines.append(f"  Q: {obj.get('objection', '')}")
-        lines.append(f"  A: {obj.get('suggested_response', '')}")
-    lines.append("")
-
-    lines += ["PRE-CALL CHECKLIST:"]
-    for item in brief.get("pre_call_checklist", []):
-        lines.append(f"  [ ] {item}")
-
-    return "\n".join(lines)
